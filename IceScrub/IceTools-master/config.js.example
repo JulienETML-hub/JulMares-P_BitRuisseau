@@ -1,0 +1,10 @@
+const iceScrumToken = "e40edb162e7d479da7048b4066c9575b";
+// 
+
+const projects = [
+  {
+    projectKey: "PROJECT2",
+    // No cartouche for this project
+  },
+];
+const API_base_url = "https://etml.icescrum.com/ws/project/";
