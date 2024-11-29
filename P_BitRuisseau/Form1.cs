@@ -95,7 +95,23 @@ namespace P_BitRuisseau
             return mediaDatas;
             // Pour la prochaine fois, utilisez les lignes 37 à 49 pour faire cette méthode (comme PlotThatLine) qui va récupérer tout les files du chemin pour les afficher ensuite
         }
+        private void updateListeFichiersLocaux(List<MediaData> mediaDatas)
+        {
 
+            ListeFichiersLocaux.Columns.Add("Titre");
+            ListeFichiersLocaux.Columns.Add("Artiste");
+            ListeFichiersLocaux.Columns.Add("Durée");
+            mediaDatas.ForEach(mediaData => 
+            {
+                ListeFichiersLocaux.View = View.Details;
+                ListViewItem item = new ListViewItem(mediaData.File_name); 
+                item.SubItems.Add(mediaData.File_artist);
+                item.SubItems.Add(mediaData.File_duration);
+                ListeFichiersLocaux.Items.Add(item);
+            });
+
+
+        }
         private void ListeFichiersLocaux_SelectedIndexChanged(object sender, EventArgs e)
         {
 
