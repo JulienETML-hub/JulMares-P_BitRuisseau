@@ -33,13 +33,24 @@ namespace P_BitRuisseau
                         var file = TagLib.File.Create(selectedFilePath);
                         string title = file.Tag.Title ?? "Inconnu";
                         string artist = file.Tag.FirstPerformer ?? "Inconnu";
-                        //string fileType = fileInfo.Extension.ToLower();
-                        //long size = fileInfo.Length / 1024 ;
-                        //string duration = file.Properties.Duration.ToString(@"mm\:ss");
-                        System.IO.File.Copy(selectedFilePath, $"../../../ressource/{title} - {artist}.mp3");
-                        //MessageBox.Show("title : " + title +"Artiste : " +  artist + "FileType : " + fileType + "Size : "+ size+ "Duration : " + duration);
-                        //MediaData mediaData = new MediaData(title,artist,fileType, size, duration);
-                        //addFileIntoListeLocal(mediaData);
+                        mediaDatas.ForEach(mediaData =>
+                        {
+                            bool doublon = false;
+                            if (mediaData.File_duration == file.Properties.Duration.ToString() && mediaData.File_sizeAccurate == file.Length)
+                            {
+                                doublon = true;
+                            }
+                            if(doublon == false)
+                            {
+                                System.IO.File.Copy(selectedFilePath, $"../../../ressource/{title} - {artist}.mp3");
+                            }
+                            else
+                            {
+                                MessageBox.Show("Le fichier que vous avez sélectionné existe déjà dans notre répertoire");
+                            }
+                        });
+
+
                     }
                     catch (Exception ex)
                     {
@@ -87,8 +98,9 @@ namespace P_BitRuisseau
                     string artist = file.Tag.FirstPerformer ?? "Inconnu";
                     string fileType = fileInfo.Extension.ToLower();
                     long size = fileInfo.Length / 1024;
+                    long sizeAccurate = file.Length;
                     string duration = file.Properties.Duration.ToString(@"mm\:ss");
-                    MediaData mediaData = new MediaData(title, artist, fileType, size, duration);
+                    MediaData mediaData = new MediaData(title, artist, fileType, size,sizeAccurate, duration);
                     mediaDatas.Add(mediaData);
                 }
             }
