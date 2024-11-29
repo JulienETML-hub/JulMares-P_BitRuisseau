@@ -104,11 +104,12 @@
             // 
             // ListeFichiersLocaux
             // 
-            ListeFichiersLocaux.Location = new Point(479, 183);
+            ListeFichiersLocaux.Location = new Point(418, 183);
             ListeFichiersLocaux.Name = "ListeFichiersLocaux";
-            ListeFichiersLocaux.Size = new Size(121, 97);
+            ListeFichiersLocaux.Size = new Size(250, 97);
             ListeFichiersLocaux.TabIndex = 9;
             ListeFichiersLocaux.UseCompatibleStateImageBehavior = false;
+            ListeFichiersLocaux.SelectedIndexChanged += ListeFichiersLocaux_SelectedIndexChanged;
             // 
             // ListeCommu
             // 
