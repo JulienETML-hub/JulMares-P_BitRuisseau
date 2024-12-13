@@ -23,7 +23,6 @@ namespace P_BitRuisseau
             File_size = file_size;
             File_duration = file_duration;
             File_sizeAccurate = file_sizeAccurate;
-            this.createHash();
         }
 
         public string File_name { get => _file_name; set => _file_name = value; }
