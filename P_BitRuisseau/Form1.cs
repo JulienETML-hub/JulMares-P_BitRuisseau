@@ -2,17 +2,24 @@ using TagLib;
 using System.IO;
 using System.Reflection;
 using TagLib.Flac;
+using MQTTnet;
+using MQTTnet.Adapter;
 namespace P_BitRuisseau
 {
     public partial class Form1 : Form
     {
-        List<MediaData> mediaDatas = new List<MediaData>();
+        private List<MediaData> mediaDatas = new List<MediaData>();
         public string mediasPath = "../../../ressource/";
+        MqttCommunication mqttCommunication = new MqttCommunication();
+
+        public List<MediaData> MediaDatas { get => mediaDatas; set => mediaDatas = value; }
+
         public Form1()
         {
             InitializeComponent();
             mediaDatas = GetAllFileInfosInPath(mediasPath);
             updateListeFichiersLocaux(mediaDatas);
+           mqttCommunication.createConnection();
         }
 
         private void UpLoadFichier_Click(object sender, EventArgs e)
@@ -40,7 +47,7 @@ namespace P_BitRuisseau
                             {
                                 doublon = true;
                             }
-                            if(doublon == false)
+                            if (doublon == false)
                             {
                                 System.IO.File.Copy(selectedFilePath, $"../../../ressource/{title} - {artist}.mp3");
                             }
@@ -100,7 +107,7 @@ namespace P_BitRuisseau
                     long size = fileInfo.Length / 1024;
                     long sizeAccurate = file.Length;
                     string duration = file.Properties.Duration.ToString(@"mm\:ss");
-                    MediaData mediaData = new MediaData(title, artist, fileType, size,sizeAccurate, duration);
+                    MediaData mediaData = new MediaData(title, artist, fileType, size, sizeAccurate, duration);
                     mediaDatas.Add(mediaData);
                 }
             }
@@ -113,10 +120,10 @@ namespace P_BitRuisseau
             ListeFichiersLocaux.Columns.Add("Titre");
             ListeFichiersLocaux.Columns.Add("Artiste");
             ListeFichiersLocaux.Columns.Add("Durée");
-            mediaDatas.ForEach(mediaData => 
+            mediaDatas.ForEach(mediaData =>
             {
                 ListeFichiersLocaux.View = View.Details;
-                ListViewItem item = new ListViewItem(mediaData.File_name); 
+                ListViewItem item = new ListViewItem(mediaData.File_name);
                 item.SubItems.Add(mediaData.File_artist);
                 item.SubItems.Add(mediaData.File_duration);
                 ListeFichiersLocaux.Items.Add(item);
@@ -126,6 +133,15 @@ namespace P_BitRuisseau
         }
         private void ListeFichiersLocaux_SelectedIndexChanged(object sender, EventArgs e)
         {
+
+        }
+        private void SerializeListMediaData(List<MediaData> mediaDatas)
+        {
+            
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            mqttCommunication.SendData(" HELLO : 3.14" + mediaDatas);
 
         }
     }

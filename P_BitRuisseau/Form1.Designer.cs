@@ -37,6 +37,7 @@
             UpLoadFichier = new Button();
             ListeFichiersLocaux = new ListView();
             ListeCommu = new ListView();
+            button1 = new Button();
             SuspendLayout();
             // 
             // MediaTheque
@@ -98,7 +99,7 @@
             UpLoadFichier.Name = "UpLoadFichier";
             UpLoadFichier.Size = new Size(75, 23);
             UpLoadFichier.TabIndex = 8;
-            UpLoadFichier.Text = "button1";
+            UpLoadFichier.Text = "upLoadFichiers";
             UpLoadFichier.UseVisualStyleBackColor = true;
             UpLoadFichier.Click += UpLoadFichier_Click;
             // 
@@ -119,11 +120,22 @@
             ListeCommu.TabIndex = 10;
             ListeCommu.UseCompatibleStateImageBehavior = false;
             // 
+            // button1
+            // 
+            button1.Location = new Point(336, 321);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 11;
+            button1.Text = "button1";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(button1);
             Controls.Add(ListeCommu);
             Controls.Add(ListeFichiersLocaux);
             Controls.Add(UpLoadFichier);
@@ -151,5 +163,6 @@
         private Button UpLoadFichier;
         private ListView ListeFichiersLocaux;
         private ListView ListeCommu;
+        private Button button1;
     }
 }
