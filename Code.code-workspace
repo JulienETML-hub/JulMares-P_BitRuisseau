@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "../Serverless_LitteraLux/Code"
+		},
+		{
+			"path": "../cicd-todo-app"
+		}
+	],
+	"settings": {}
+}

@@ -8,7 +8,7 @@ namespace P_BitRuisseau
 {
     public partial class Form1 : Form
     {
-        private List<MediaData> mediaDatas = new List<MediaData>();
+        public static List<MediaData> mediaDatas = new List<MediaData>();
         public string mediasPath = "../../../ressource/";
         MqttCommunication mqttCommunication = new MqttCommunication();
 
@@ -72,6 +72,7 @@ namespace P_BitRuisseau
         {
 
         }
+
         private void addFileIntoListeLocal(MediaData mediaData)
         {
             ListeFichiersLocaux.View = View.Details;
@@ -116,7 +117,7 @@ namespace P_BitRuisseau
         }
         private void updateListeFichiersLocaux(List<MediaData> mediaDatas)
         {
-
+            ListeFichiersLocaux.Clear();
             ListeFichiersLocaux.Columns.Add("Titre");
             ListeFichiersLocaux.Columns.Add("Artiste");
             ListeFichiersLocaux.Columns.Add("Durée");
@@ -141,7 +142,7 @@ namespace P_BitRuisseau
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            mqttCommunication.SendData(" HELLO : 3.14" + mediaDatas);
+            mqttCommunication.SendData("{ \"MessageType\": 1 }");
 
         }
     }

@@ -2,49 +2,141 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using WinFormsSaucisseau.Classes.Interfaces;
 
 namespace P_BitRuisseau
 {
-    public class EnveloppeEnvoieCatalogue
+    public class SendCatalog : IJsonSerializableMessage
     {
-        /* 
-            type 1 ENVOIE_CATALOGUE
-         */
-        private int _type;
-        private string _guid;
+        /*
+            type 1
+        */
         private List<MediaData> _content;
 
-        public string Guid { get => _guid; set => _guid = value; }
-        public List<MediaData> Content { get => _content; set => _content = value; }
-        public int Type { get => _type; set => _type = value; }
+        public List<MediaData>? Content
+        {
+            get => _content;
+            set => _content = value;
+        }
+
+        public string ToJson()
+        {
+            return JsonSerializer.Serialize(this);
+        }
     }
 
-    public class EnveloppeDemandeCatalogue
+    public class AskCatalog : IJsonSerializableMessage
     {
-        /* 
-            type 2 DEMANDE_CATALOGUE
-         */
-        private int _type;
-        private string _guid;
+        /*
+            type 2
+        */
         private string _content;
 
-        public string Guid { get => _guid; set => _guid = value; }
-        public string Content { get => _content; set => _content = value; }
-        public int Type { get => _type; set => _type = value; }
+        public string Content
+        {
+            get => _content;
+            set => _content = value;
+        }
+
+        public string ToJson()
+        {
+            return JsonSerializer.Serialize(this);
+        }
     }
 
-    public class EnveloppeEnvoieFichier
+    public class SendMusic : IJsonSerializableMessage
     {
-        /* 
-            type 3 ENVOIE_FICHIER
-         */
-        private int _type;
-        private string _guid;
+        /*
+            type 3
+        */
+        private MediaData _fileInfo;
         private string _content;
 
-        public string Guid { get => _guid; set => _guid = value; }
-        public string Content { get => _content; set => _content = value; }
-        public int Type { get => _type; set => _type = value; }
+        public string Content
+        {
+            get => _content;
+            set => _content = value;
+        }
+
+        public MediaData FileInfo
+        {
+            get => _fileInfo;
+            set => _fileInfo = value;
+        }
+
+        public string ToJson()
+        {
+            return JsonSerializer.Serialize(this);
+        }
     }
+
+    public class AskMusic : IJsonSerializableMessage
+    {
+        /*
+            type 4
+        */
+        private string _file_name;
+
+        public string FileName
+        {
+            get => _file_name;
+            set => _file_name = value;
+        }
+
+        public string ToJson()
+        {
+            return JsonSerializer.Serialize(this);
+        }
+    }
+    //public class EnveloppeEnvoieCatalogue : IJsonSerializableMessage
+    //{
+    //    /* 
+    //        type 1 ENVOIE_CATALOGUE
+    //     */
+    //    private int _type;
+    //    private string _guid;
+    //    private List<MediaData> _content;
+
+    //    public string Guid { get => _guid; set => _guid = value; }
+    //    public List<MediaData> Content { get => _content; set => _content = value; }
+    //    public int Type { get => _type; set => _type = value; }
+
+    //    public string ToJson()
+    //    {
+    //        return JsonSerializer.Serialize(this);
+    //    }
+    //}
+
+    //public class EnveloppeDemandeCatalogue
+    //{
+    //    /* 
+    //        type 2 DEMANDE_CATALOGUE
+    //     */
+    //    private int _type;
+    //    private string _guid;
+    //    private string _content;
+
+    //    public string Guid { get => _guid; set => _guid = value; }
+    //    public string Content { get => _content; set => _content = value; }
+    //    public int Type { get => _type; set => _type = value; }
+    //}
+
+    //public class EnveloppeEnvoieFichier
+    //{
+    //    /* 
+    //        type 3 ENVOIE_FICHIER
+    //     */
+    //    private int _type;
+    //    private string _guid;
+    //    private string _content;
+
+    //    public string Guid { get => _guid; set => _guid = value; }
+    //    public string Content { get => _content; set => _content = value; }
+    //    public int Type { get => _type; set => _type = value; }
+    //}
+
+
 }

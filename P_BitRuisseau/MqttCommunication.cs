@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Text.Json;
 using P_BitRuisseau;
+using TagLib.Flac;
 namespace P_BitRuisseau
 {
     public class MqttCommunication
@@ -39,8 +40,8 @@ namespace P_BitRuisseau
         int port = 1883;
         string clientId = Guid.NewGuid().ToString(); // création GUID
 
-        string topicBroadCast = "testJulien";  // nom du topic commun
-        string topicJulien = "testJulien"; // nom du topic personnel
+        string topicBroadCast = "test";  // nom du topic commun
+        string topicJulien = "test"; // nom du topic personnel
         string username = "ict";
         string password = "321";
 
@@ -64,11 +65,14 @@ namespace P_BitRuisseau
             // Vérifier la connection au Broker
             if (connectResult.ResultCode == MqttClientConnectResultCode.Success)
             {
+                SendCatalog envoieCatalogue = new SendCatalog();
+                envoieCatalogue.Content = Form1.mediaDatas;
+                SendMessage(mqttClient, MessageType.ENVOIE_CATALOGUE, clientId, envoieCatalogue, topicJulien);
                 MessageBox.Show("Connected to MQTT broker successfully.");
                 mqttClient.ApplicationMessageReceivedAsync += async e =>
                 {
                     string receivedMessage = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
-
+                    ReiceiveMessage(e);/*
                     MessageBox.Show($"Received message: {receivedMessage}");
 
                     // Vérifier que le message contient HELLO
@@ -98,7 +102,7 @@ namespace P_BitRuisseau
                         // Envoyez le message
                         mqttClient.PublishAsync(message);
                         Console.WriteLine("Message sent successfully!");
-                    }
+                    }*/
 
                     return;
                 };
@@ -155,34 +159,46 @@ namespace P_BitRuisseau
 
         private async void button1_Click_1(object sender, EventArgs e)
         {
-            SendData("HELLO, qui a des musiques");
+            SendCatalog envoieCatalogue = new SendCatalog();
+            envoieCatalogue.Content = Form1.mediaDatas;
+            SendMessage(mqttClient, MessageType.ENVOIE_CATALOGUE, clientId, envoieCatalogue, topicJulien);
         }
 
-        /*
+        
         private void ReiceiveMessage(MqttApplicationMessageReceivedEventArgs message)
         {
             try
             {
-                Debug.Write(Encoding.UTF8.GetString(message.ApplicationMessage.Payload));
+                Debug.Write("ReceiveMessage"+Encoding.UTF8.GetString(message.ApplicationMessage.Payload));
                 GenericEnvelope enveloppe = JsonSerializer.Deserialize<GenericEnvelope>(Encoding.UTF8.GetString(message.ApplicationMessage.Payload));
+
                 if (enveloppe.SenderId == clientId) return;
                 switch (enveloppe.MessageType)
                 {
                     case MessageType.ENVOIE_CATALOGUE:
                         {
-                            EnveloppeEnvoieCatalogue enveloppeEnvoieCatalogue = JsonSerializer.Deserialize<EnveloppeEnvoieCatalogue>(enveloppe.EnveloppeJson);
+                            //var SendCatalog = JsonSerializer.Deserialize<object>(enveloppe.EnveloppeJson);
+                            //MessageBox.Show("sss");
+                            SendCatalog SendCatalog = JsonSerializer.Deserialize<SendCatalog>(enveloppe.EnveloppeJson);
+                            MessageBox.Show("Recu envoie enveloppe" + SendCatalog.Content[0].File_name.ToString());
+                           
+                            foreach(MediaData mediaData in SendCatalog.Content)
+                            {
+                                Form1.mediaDatas.Add(mediaData);
+                            }
+     
                             break;
                         }
                     case MessageType.DEMANDE_CATALOGUE:
                         {
-                            EnveloppeEnvoieCatalogue envoieCatalogue = new EnveloppeEnvoieCatalogue();
-                            envoieCatalogue.Content = _maListMediaData;
-                            SendMessage(mqttClient, MessageType.ENVOIE_CATALOGUE, clientId, envoieCatalogue, "test");
+                            SendCatalog envoieCatalogue = new SendCatalog();
+                            envoieCatalogue.Content = Form1.mediaDatas;
+                            SendMessage(mqttClient, MessageType.ENVOIE_CATALOGUE, clientId, envoieCatalogue, topicJulien);
                             break;
                         }
                     case MessageType.ENVOIE_FICHIER:
                         {
-                            EnveloppeEnvoieFichier enveloppeEnvoieFichier = JsonSerializer.Deserialize<EnveloppeEnvoieFichier>(enveloppe.EnveloppeJson);
+                            SendMusic enveloppeEnvoieFichier = JsonSerializer.Deserialize<SendMusic>(enveloppe.EnveloppeJson);
                             break;
                         }
                 }
@@ -191,7 +207,7 @@ namespace P_BitRuisseau
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
+                Debug.WriteLine("CATCH"+ex.ToString());
             }
         }
         private async void SendMessage(IMqttClient mqttClient, MessageType type, string senderId, IJsonSerializableMessage content, string topic)
@@ -205,11 +221,10 @@ namespace P_BitRuisseau
                 .WithPayload(JsonSerializer.Serialize(enveloppe))
                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
                 .Build();
-
+            MessageBox.Show("aaa" + enveloppe.EnveloppeJson);
             await mqttClient.PublishAsync(message);
             await Task.Delay(1000);
         }
-*/
 
     }
 }

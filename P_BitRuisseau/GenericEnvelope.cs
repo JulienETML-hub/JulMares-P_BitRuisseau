@@ -10,7 +10,8 @@ namespace P_BitRuisseau
     {
         ENVOIE_CATALOGUE,
         DEMANDE_CATALOGUE,
-        ENVOIE_FICHIER
+        ENVOIE_FICHIER,
+        DEMANDE_FICHIER
     }
     public class GenericEnvelope
     {
