@@ -19,7 +19,7 @@ namespace P_BitRuisseau
             InitializeComponent();
             mediaDatas = GetAllFileInfosInPath(mediasPath);
             updateListeFichiersLocaux(mediaDatas);
-           mqttCommunication.createConnection();
+            mqttCommunication.createConnection();
         }
 
         private void UpLoadFichier_Click(object sender, EventArgs e)
@@ -138,14 +138,14 @@ namespace P_BitRuisseau
         }
         private void SerializeListMediaData(List<MediaData> mediaDatas)
         {
-            
+
         }
         private void button1_Click(object sender, EventArgs e)
         {
             // Création de l'enveloppe JSON pour la demande de catalogue
             AskCatalog askCatalog = new AskCatalog
             {
-                
+
                 Content = "Demande de catalogue",
 
             };
@@ -156,5 +156,14 @@ namespace P_BitRuisseau
 
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            AskMusic askMusic = new AskMusic
+            {
+                FileName = "waiting",
+            };
+            mqttCommunication.SendFile(mqttCommunication.MqttClient, MessageType.DEMANDE_FICHIER, "mqttx_f1aade87", askMusic, "test");
+
+        }
     }
 }

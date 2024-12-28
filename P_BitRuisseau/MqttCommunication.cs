@@ -71,6 +71,8 @@ namespace P_BitRuisseau
                 SendCatalog envoieCatalogue = new SendCatalog();
                 envoieCatalogue.Content = Form1.mediaDatas;
                 SendMessage(mqttClient, MessageType.ENVOIE_CATALOGUE, clientId, envoieCatalogue, topicJulien);
+                SendMusic envoieMusique = new SendMusic();
+                
                 MessageBox.Show("Connected to MQTT broker successfully.");
                 mqttClient.ApplicationMessageReceivedAsync += async e =>
                 {
@@ -187,7 +189,9 @@ namespace P_BitRuisseau
                            
                             foreach(MediaData mediaData in SendCatalog.Content)
                             {
+                                Debug.WriteLine("aaaaaaaaaaaaaaaaaaaa" + mediaData.File_name);
                                 Form1.mediaDatas.Add(mediaData);
+                                
                             }
      
                             break;
@@ -205,6 +209,21 @@ namespace P_BitRuisseau
                     case MessageType.ENVOIE_FICHIER:
                         {
                             SendMusic enveloppeEnvoieFichier = JsonSerializer.Deserialize<SendMusic>(enveloppe.EnveloppeJson);
+                            break;
+                        }
+                    case MessageType.DEMANDE_FICHIER:
+                        {
+                            AskMusic enveloppeDemandeMusic = JsonSerializer.Deserialize<AskMusic>(enveloppe.EnveloppeJson);
+                            string fichierDmd = enveloppeDemandeMusic.FileName;
+                            SendMusic envoieMusique = new SendMusic();
+                            MediaData fileAsked = Form1.mediaDatas.Find(a => a.File_name == fichierDmd);
+                            envoieMusique.FileInfo = fileAsked;
+                            if(fileAsked == null)
+                            {
+                                break;
+                            }
+                            envoieMusique.Content = fileAsked.EncodeFileToBase64();
+                            SendFile(mqttClient, MessageType.ENVOIE_FICHIER, clientId, envoieMusique, topicJulien);
                             break;
                         }
                 }
@@ -231,6 +250,26 @@ namespace P_BitRuisseau
             await mqttClient.PublishAsync(message);
             await Task.Delay(1000);
         }
+
+
+        public async void SendFile(IMqttClient mqttClient, MessageType type, string senderId, IJsonSerializableMessage content, string topic)
+        {
+            
+           
+            GenericEnvelope enveloppe = new GenericEnvelope();
+            enveloppe.SenderId = senderId;
+            enveloppe.EnveloppeJson = content.ToJson();
+            enveloppe.MessageType = type;
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic(topic)
+                .WithPayload(JsonSerializer.Serialize(enveloppe))
+                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
+                .Build();
+            MessageBox.Show("aaa" + enveloppe.EnveloppeJson);
+            await mqttClient.PublishAsync(message);
+            await Task.Delay(1000);
+        }
+
 
     }
 }

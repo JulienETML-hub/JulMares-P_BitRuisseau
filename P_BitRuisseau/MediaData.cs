@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,12 @@ namespace P_BitRuisseau
         {
             File_hash = this.GetHashCode();
         }
-        
+        public string EncodeFileToBase64()
+        {
+            byte[] fileBytes =  System.IO.File.ReadAllBytes( $"../../../ressource/{this.File_name} - {this.File_artist}.mp3");
+
+
+            return Convert.ToBase64String(fileBytes);
+        }
     }
 }
