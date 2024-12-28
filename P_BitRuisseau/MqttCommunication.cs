@@ -45,6 +45,9 @@ namespace P_BitRuisseau
         string username = "ict";
         string password = "321";
 
+        public IMqttClient MqttClient { get => mqttClient; set => mqttClient = value; }
+        public MqttClientOptions MqttOptions { get => mqttOptions; set => mqttOptions = value; }
+        public MqttClientFactory Factory { get => factory; set => factory = value; }
 
         public async void createConnection()
         {
@@ -191,9 +194,12 @@ namespace P_BitRuisseau
                         }
                     case MessageType.DEMANDE_CATALOGUE:
                         {
+                            Debug.WriteLine("Demande catalogue recu");
+
                             SendCatalog envoieCatalogue = new SendCatalog();
                             envoieCatalogue.Content = Form1.mediaDatas;
                             SendMessage(mqttClient, MessageType.ENVOIE_CATALOGUE, clientId, envoieCatalogue, topicJulien);
+                            Debug.WriteLine("Demande catalogue recu2");
                             break;
                         }
                     case MessageType.ENVOIE_FICHIER:
@@ -210,7 +216,7 @@ namespace P_BitRuisseau
                 Debug.WriteLine("CATCH"+ex.ToString());
             }
         }
-        private async void SendMessage(IMqttClient mqttClient, MessageType type, string senderId, IJsonSerializableMessage content, string topic)
+        public async void SendMessage(IMqttClient mqttClient, MessageType type, string senderId, IJsonSerializableMessage content, string topic)
         {
             GenericEnvelope enveloppe = new GenericEnvelope();
             enveloppe.SenderId = senderId;

@@ -142,8 +142,19 @@ namespace P_BitRuisseau
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            mqttCommunication.SendData("{ \"MessageType\": 1 }");
+            // Création de l'enveloppe JSON pour la demande de catalogue
+            AskCatalog askCatalog = new AskCatalog
+            {
+                
+                Content = "Demande de catalogue",
+
+            };
+
+
+            // Envoi de l'enveloppe via MQTT
+            mqttCommunication.SendMessage(mqttCommunication.MqttClient, MessageType.DEMANDE_CATALOGUE, "mqttx_f1aade87", askCatalog, "test");
 
         }
+
     }
 }
