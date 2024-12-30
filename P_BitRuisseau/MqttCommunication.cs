@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using P_BitRuisseau;
 using TagLib.Flac;
+using System.Drawing.Imaging;
 namespace P_BitRuisseau
 {
     public class MqttCommunication
@@ -174,9 +175,8 @@ namespace P_BitRuisseau
         {
             try
             {
-                Debug.Write("ReceiveMessage"+Encoding.UTF8.GetString(message.ApplicationMessage.Payload));
+                Debug.WriteLine("ReceiveMessage"+Encoding.UTF8.GetString(message.ApplicationMessage.Payload));
                 GenericEnvelope enveloppe = JsonSerializer.Deserialize<GenericEnvelope>(Encoding.UTF8.GetString(message.ApplicationMessage.Payload));
-
                 if (enveloppe.SenderId == clientId) return;
                 switch (enveloppe.MessageType)
                 {
@@ -185,11 +185,11 @@ namespace P_BitRuisseau
                             //var SendCatalog = JsonSerializer.Deserialize<object>(enveloppe.EnveloppeJson);
                             //MessageBox.Show("sss");
                             SendCatalog SendCatalog = JsonSerializer.Deserialize<SendCatalog>(enveloppe.EnveloppeJson);
-                            MessageBox.Show("Recu envoie enveloppe" + SendCatalog.Content[0].File_name.ToString());
+                            MessageBox.Show("Recu envoie enveloppe" + SendCatalog.Content[0].Title.ToString());
                            
                             foreach(MediaData mediaData in SendCatalog.Content)
                             {
-                                Debug.WriteLine("aaaaaaaaaaaaaaaaaaaa" + mediaData.File_name);
+                                Debug.WriteLine("aaaaaaaaaaaaaaaaaaaa" + mediaData.Title);
                                 Form1.mediaDatas.Add(mediaData);
                                 
                             }
@@ -208,20 +208,39 @@ namespace P_BitRuisseau
                         }
                     case MessageType.ENVOIE_FICHIER:
                         {
+                            Debug.WriteLine("envoie fichier1");
+
                             SendMusic enveloppeEnvoieFichier = JsonSerializer.Deserialize<SendMusic>(enveloppe.EnveloppeJson);
+                            byte[] contenuFichier = Convert.FromBase64String(enveloppeEnvoieFichier.Content);
+                            //byte[] contenuFichier = System.Text.Encoding.UTF8.GetBytes(enveloppeEnvoieFichier.Content);
+                            MediaData mediaData = new MediaData(file_name: enveloppeEnvoieFichier.FileInfo.Title, file_artist: enveloppeEnvoieFichier.FileInfo.Artist, file_type: enveloppeEnvoieFichier.FileInfo.Type, file_size: enveloppeEnvoieFichier.FileInfo.Size, file_duration : enveloppeEnvoieFichier.FileInfo.Duration);
+                            //MediaData mediaData = enveloppeEnvoieFichier.FileInfo;
+                            System.IO.File.WriteAllBytes($"../../../ressource/test/{mediaData.Title} - {mediaData.Artist}{mediaData.Type}", contenuFichier);
+                            //System.IO.File.Create($"../../../ressource/test/{mediaData.Title} - {mediaData.Artist}{mediaData.Type}");
+                            //System.IO.File.WriteAllBytes($"../../../ressource/test/{mediaData.Title} - {mediaData.Artist}{mediaData.Type}", contenuFichier);
+                            var file = TagLib.File.Create($"../../../ressource/test/{mediaData.Title} - {mediaData.Artist}{mediaData.Type}");
+
+                            //var file = TagLib.File.Create()
+                            Debug.WriteLine("envoie fichier2");
+                            
                             break;
                         }
                     case MessageType.DEMANDE_FICHIER:
                         {
+                            // prend lenvleoppe de dmd de fichier pr lire quel titre on veut de nous
                             AskMusic enveloppeDemandeMusic = JsonSerializer.Deserialize<AskMusic>(enveloppe.EnveloppeJson);
-                            string fichierDmd = enveloppeDemandeMusic.FileName;
+                            // recup le nom du titre
+                            string fichierDmd = enveloppeDemandeMusic.Title;
                             SendMusic envoieMusique = new SendMusic();
-                            MediaData fileAsked = Form1.mediaDatas.Find(a => a.File_name == fichierDmd);
+                            // Cherche le nom du titre parmis la liste des mediadata et renvoie lobjet mediadata correspondant
+                            MediaData fileAsked = Form1.mediaDatas.Find(a => a.Title == fichierDmd);
                             envoieMusique.FileInfo = fileAsked;
-                            if(fileAsked == null)
+                            Debug.WriteLine(fileAsked.Title.ToString() + fileAsked.Artist.ToString());
+                            if (fileAsked == null)
                             {
                                 break;
                             }
+                            // par rapport au mediadata dmd, récupérer les données binaire les convertis en string et ls mets dans le content qui va etre envoyé via mqtt
                             envoieMusique.Content = fileAsked.EncodeFileToBase64();
                             SendFile(mqttClient, MessageType.ENVOIE_FICHIER, clientId, envoieMusique, topicJulien);
                             break;

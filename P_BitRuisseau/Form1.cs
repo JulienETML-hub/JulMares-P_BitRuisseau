@@ -13,7 +13,7 @@ namespace P_BitRuisseau
         MqttCommunication mqttCommunication = new MqttCommunication();
 
         public List<MediaData> MediaDatas { get => mediaDatas; set => mediaDatas = value; }
-
+        public List<MediaData> MediaDatasOnline { get => mediaDatas; set => mediaDatas = value; }
         public Form1()
         {
             InitializeComponent();
@@ -43,7 +43,7 @@ namespace P_BitRuisseau
                         mediaDatas.ForEach(mediaData =>
                         {
                             bool doublon = false;
-                            if (mediaData.File_duration == file.Properties.Duration.ToString() && mediaData.File_sizeAccurate == file.Length)
+                            if (mediaData.Duration == file.Properties.Duration.ToString())
                             {
                                 doublon = true;
                             }
@@ -80,10 +80,10 @@ namespace P_BitRuisseau
             ListeFichiersLocaux.GridLines = true;
             ListeFichiersLocaux.Width = 300;
 
-            ListeFichiersLocaux.Columns.Add("Titre", mediaData.File_name);
-            ListeFichiersLocaux.Columns.Add("Artiste", mediaData.File_artist);
-            ListeFichiersLocaux.Columns.Add("Durée", mediaData.File_duration);
-            ListeFichiersLocaux.Columns.Add("Type de fichier", mediaData.File_type);
+            ListeFichiersLocaux.Columns.Add("Titre", mediaData.Title);
+            ListeFichiersLocaux.Columns.Add("Artiste", mediaData.Artist);
+            ListeFichiersLocaux.Columns.Add("Durée", mediaData.Duration);
+            ListeFichiersLocaux.Columns.Add("Type de fichier", mediaData.Type);
 
         }
         public async Task LoadFile()
@@ -108,7 +108,7 @@ namespace P_BitRuisseau
                     long size = fileInfo.Length / 1024;
                     long sizeAccurate = file.Length;
                     string duration = file.Properties.Duration.ToString(@"mm\:ss");
-                    MediaData mediaData = new MediaData(title, artist, fileType, size, sizeAccurate, duration);
+                    MediaData mediaData = new MediaData(title, artist, fileType, size, duration);
                     mediaDatas.Add(mediaData);
                 }
             }
@@ -124,9 +124,9 @@ namespace P_BitRuisseau
             mediaDatas.ForEach(mediaData =>
             {
                 ListeFichiersLocaux.View = View.Details;
-                ListViewItem item = new ListViewItem(mediaData.File_name);
-                item.SubItems.Add(mediaData.File_artist);
-                item.SubItems.Add(mediaData.File_duration);
+                ListViewItem item = new ListViewItem(mediaData.Title);
+                item.SubItems.Add(mediaData.Artist);
+                item.SubItems.Add(mediaData.Duration);
                 ListeFichiersLocaux.Items.Add(item);
             });
 
@@ -160,7 +160,7 @@ namespace P_BitRuisseau
         {
             AskMusic askMusic = new AskMusic
             {
-                FileName = "waiting",
+                Title = "waiting",
             };
             mqttCommunication.SendFile(mqttCommunication.MqttClient, MessageType.DEMANDE_FICHIER, "mqttx_f1aade87", askMusic, "test");
 

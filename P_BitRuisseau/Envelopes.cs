@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using WinFormsSaucisseau.Classes.Interfaces;
 
 namespace P_BitRuisseau
@@ -80,7 +81,7 @@ namespace P_BitRuisseau
         */
         private string _file_name;
 
-        public string FileName
+        public string Title
         {
             get => _file_name;
             set => _file_name = value;
