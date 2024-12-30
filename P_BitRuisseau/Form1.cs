@@ -9,11 +9,12 @@ namespace P_BitRuisseau
     public partial class Form1 : Form
     {
         public static List<MediaData> mediaDatas = new List<MediaData>();
+        public static List<MediaData> mediaDatasOnline = new List<MediaData>();
         public string mediasPath = "../../../ressource/";
         MqttCommunication mqttCommunication = new MqttCommunication();
 
         public List<MediaData> MediaDatas { get => mediaDatas; set => mediaDatas = value; }
-        public List<MediaData> MediaDatasOnline { get => mediaDatas; set => mediaDatas = value; }
+        public List<MediaData> MediaDatasOnline { get => mediaDatasOnline; set => mediaDatasOnline = value; }
         public Form1()
         {
             InitializeComponent();
@@ -164,6 +165,62 @@ namespace P_BitRuisseau
             };
             mqttCommunication.SendFile(mqttCommunication.MqttClient, MessageType.DEMANDE_FICHIER, "mqttx_f1aade87", askMusic, "test");
 
+        }
+        private void updateListeFichiersCommu(List<MediaData> mediaDatasOnline)
+        {
+            ListeCommu.Clear();
+            ListeCommu.View = View.Details;
+            ListeCommu.FullRowSelect = true;
+            ListeCommu.Columns.Add("Titre");
+            ListeCommu.Columns.Add("Artiste");
+            ListeCommu.Columns.Add("Durée");
+            ListeCommu.Columns.Add("Action");
+            int index = 0;
+            mediaDatasOnline.ForEach(mediaData =>
+            {
+                
+                ListViewItem item = new ListViewItem(mediaData.Title);
+                item.SubItems.Add(mediaData.Artist);
+                item.SubItems.Add(mediaData.Duration);
+                item.SubItems.Add("DL");
+                item.Tag = index++;
+                ListeCommu.Items.Add(item);
+            });
+            ListeCommu.MouseClick += ListeCommu_MouseClick;
+        }
+        private void ListeCommu_MouseClick(object sender, MouseEventArgs e)
+        {
+            // Récupère l'élément sélectionné
+            ListViewHitTestInfo info = ListeCommu.HitTest(e.Location);
+            ListViewItem item = info.Item;
+
+            // Vérifie si l'utilisateur a cliqué sur la colonne "Action"
+            if (item != null && info.SubItem != null && item.SubItems[3] == info.SubItem)
+            {
+                // Récupère l'index ou d'autres données associées à l'élément
+                int index = (int)item.Tag;
+                MediaData selectedMedia = mediaDatasOnline[index];
+
+                // Appelle une action pour télécharger ou traiter la musique
+                DownloadMusic(selectedMedia);
+            }
+        }
+        private void refresh_Click(object sender, EventArgs e)
+        {
+            updateListeFichiersCommu(mediaDatasOnline);
+        }
+
+        private void ListeCommu_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void DownloadMusic(MediaData mediadata)
+        {
+            AskMusic askMusic = new AskMusic
+            {
+                Title = mediadata.Title,
+            };
+            mqttCommunication.SendFile(mqttCommunication.MqttClient, MessageType.DEMANDE_FICHIER, "mqttx_f1aade87", askMusic, "test");
         }
     }
 }

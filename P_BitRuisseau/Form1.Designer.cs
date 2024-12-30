@@ -39,6 +39,7 @@
             ListeCommu = new ListView();
             button1 = new Button();
             button2 = new Button();
+            refresh = new Button();
             SuspendLayout();
             // 
             // MediaTheque
@@ -115,11 +116,12 @@
             // 
             // ListeCommu
             // 
-            ListeCommu.Location = new Point(182, 183);
+            ListeCommu.Location = new Point(30, 183);
             ListeCommu.Name = "ListeCommu";
-            ListeCommu.Size = new Size(121, 97);
+            ListeCommu.Size = new Size(273, 97);
             ListeCommu.TabIndex = 10;
             ListeCommu.UseCompatibleStateImageBehavior = false;
+            ListeCommu.SelectedIndexChanged += ListeCommu_SelectedIndexChanged;
             // 
             // button1
             // 
@@ -141,11 +143,22 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
+            // refresh
+            // 
+            refresh.Location = new Point(349, 255);
+            refresh.Name = "refresh";
+            refresh.Size = new Size(75, 23);
+            refresh.TabIndex = 13;
+            refresh.Text = "refresh";
+            refresh.UseVisualStyleBackColor = true;
+            refresh.Click += refresh_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(refresh);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(ListeCommu);
@@ -177,5 +190,6 @@
         private ListView ListeCommu;
         private Button button1;
         private Button button2;
+        private Button refresh;
     }
 }

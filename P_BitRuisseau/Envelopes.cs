@@ -22,11 +22,19 @@ namespace P_BitRuisseau
             get => _content;
             set => _content = value;
         }
-
         public string ToJson()
         {
-            return JsonSerializer.Serialize(this);
+            // Ajoute des options d'indentation
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+            return JsonSerializer.Serialize(this, options);
         }
+        /*public string ToJson()
+        {
+            return JsonSerializer.Serialize(this);
+        }*/
     }
 
     public class AskCatalog : IJsonSerializableMessage
@@ -41,11 +49,19 @@ namespace P_BitRuisseau
             get => _content;
             set => _content = value;
         }
-
         public string ToJson()
         {
-            return JsonSerializer.Serialize(this);
+            // Ajoute des options d'indentation
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+            return JsonSerializer.Serialize(this, options);
         }
+        /*public string ToJson()
+        {
+            return JsonSerializer.Serialize(this);
+        }*/
     }
 
     public class SendMusic : IJsonSerializableMessage
@@ -67,11 +83,19 @@ namespace P_BitRuisseau
             get => _fileInfo;
             set => _fileInfo = value;
         }
-
         public string ToJson()
         {
-            return JsonSerializer.Serialize(this);
+            // Ajoute des options d'indentation
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+            return JsonSerializer.Serialize(this, options);
         }
+        /*public string ToJson()
+        {
+            return JsonSerializer.Serialize(this);
+        }*/
     }
 
     public class AskMusic : IJsonSerializableMessage
@@ -86,11 +110,19 @@ namespace P_BitRuisseau
             get => _file_name;
             set => _file_name = value;
         }
-
         public string ToJson()
         {
-            return JsonSerializer.Serialize(this);
+            // Ajoute des options d'indentation
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+            return JsonSerializer.Serialize(this, options);
         }
+        /*public string ToJson()
+        {
+            return JsonSerializer.Serialize(this);
+        }*/
     }
     //public class EnveloppeEnvoieCatalogue : IJsonSerializableMessage
     //{

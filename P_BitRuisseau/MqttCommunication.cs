@@ -190,7 +190,7 @@ namespace P_BitRuisseau
                             foreach(MediaData mediaData in SendCatalog.Content)
                             {
                                 Debug.WriteLine("aaaaaaaaaaaaaaaaaaaa" + mediaData.Title);
-                                Form1.mediaDatas.Add(mediaData);
+                                Form1.mediaDatasOnline.Add(mediaData);
                                 
                             }
      
