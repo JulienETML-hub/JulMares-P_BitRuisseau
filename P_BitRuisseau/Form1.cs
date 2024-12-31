@@ -218,7 +218,7 @@ namespace P_BitRuisseau
         {
             AskMusic askMusic = new AskMusic
             {
-                Title = mediadata.Title,
+                Title = mediadata.Title + mediadata.Type,
             };
             mqttCommunication.SendFile(mqttCommunication.MqttClient, MessageType.DEMANDE_FICHIER, "mqttx_f1aade87", askMusic, "test");
         }

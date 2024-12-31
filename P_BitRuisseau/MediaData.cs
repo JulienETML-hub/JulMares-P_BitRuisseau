@@ -33,8 +33,8 @@ namespace P_BitRuisseau
 
         public string EncodeFileToBase64()
         {
-            byte[] fileBytes =  System.IO.File.ReadAllBytes( $"../../../ressource/{this.Title} - {this.Artist}{this.Type} ");
-
+            byte[] fileBytes =  System.IO.File.ReadAllBytes( $"../../../ressource/{this.Title}");
+            //  - {this.Artist}{this.Type} 
 
             return Convert.ToBase64String(fileBytes);
         }
