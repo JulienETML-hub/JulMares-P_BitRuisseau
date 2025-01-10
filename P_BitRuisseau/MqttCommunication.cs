@@ -41,8 +41,8 @@ namespace P_BitRuisseau
         int port = 1883;
         string clientId = Guid.NewGuid().ToString(); // création GUID
 
-        string topicBroadCast = "test";  // nom du topic commun
-        string topicJulien = "test"; // nom du topic personnel
+        string topicBroadCast = "julmat";  // nom du topic commun
+        string topicJulien = "julmat"; // nom du topic personnel
         string username = "ict";
         string password = "321";
 
@@ -78,37 +78,7 @@ namespace P_BitRuisseau
                 mqttClient.ApplicationMessageReceivedAsync += async e =>
                 {
                     string receivedMessage = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
-                    ReiceiveMessage(e);/*
-                    MessageBox.Show($"Received message: {receivedMessage}");
-
-                    // Vérifier que le message contient HELLO
-                    if (receivedMessage.Contains("HELLO") == true)
-                    {
-                        // Obtenir la liste des musiques à envoyer
-                        // string musicList = GetMusicList();
-                        MessageBox.Show($"Received message with HELLO: {receivedMessage}");
-
-                        // Construisez le message à envoyer (sera changé en JSON)
-                        string response = $"{clientId} (Philippe) possède les musiques suivantes :\n music list varaible";
-
-                        if (mqttClient == null || !mqttClient.IsConnected)
-                        {
-                            MessageBox.Show("Client not connected. Reconnecting...");
-                            await mqttClient.ConnectAsync(mqttOptions);
-                        }
-
-                        // Créez le message à envoyer
-                        var message = new MqttApplicationMessageBuilder()
-                            .WithTopic(topicJulien)
-                            .WithPayload(response)
-                            .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
-                            .WithRetainFlag(false)
-                            .Build();
-
-                        // Envoyez le message
-                        mqttClient.PublishAsync(message);
-                        Console.WriteLine("Message sent successfully!");
-                    }*/
+                    ReiceiveMessage(e);
 
                     return;
                 };
@@ -185,7 +155,7 @@ namespace P_BitRuisseau
                             //var SendCatalog = JsonSerializer.Deserialize<object>(enveloppe.EnveloppeJson);
                             //MessageBox.Show("sss");
                             SendCatalog SendCatalog = JsonSerializer.Deserialize<SendCatalog>(enveloppe.EnveloppeJson);
-                            MessageBox.Show("Recu envoie enveloppe" + SendCatalog.Content[0].Title.ToString());
+                           // MessageBox.Show("Recu envoie enveloppe" + SendCatalog.Content[0].Title.ToString());
                            
                             foreach(MediaData mediaData in SendCatalog.Content)
                             {
@@ -228,6 +198,7 @@ namespace P_BitRuisseau
                         }
                     case MessageType.DEMANDE_FICHIER:
                         {
+                            MessageBox.Show("messagedemandedefichier recu");
                             // prend lenvleoppe de dmd de fichier pr lire quel titre on veut de nous
                             AskMusic enveloppeDemandeMusic = JsonSerializer.Deserialize<AskMusic>(enveloppe.EnveloppeJson);
                             // recup le nom du titre
@@ -243,6 +214,7 @@ namespace P_BitRuisseau
                             }
                             Debug.WriteLine(fileAsked.Title.ToString() + fileAsked.Artist.ToString());
                             envoieMusique.FileInfo.Title = fileAsked.Title + fileAsked.Type;
+
                             // par rapport au mediadata dmd, récupérer les données binaire les convertis en string et ls mets dans le content qui va etre envoyé via mqtt
                             envoieMusique.Content = fileAsked.EncodeFileToBase64();
                             SendFile(mqttClient, MessageType.ENVOIE_FICHIER, clientId, envoieMusique, topicJulien);
@@ -268,7 +240,7 @@ namespace P_BitRuisseau
                 .WithPayload(JsonSerializer.Serialize(enveloppe))
                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
                 .Build();
-            MessageBox.Show("aaa" + enveloppe.EnveloppeJson);
+            //MessageBox.Show("aaa" + enveloppe.EnveloppeJson);
             await mqttClient.PublishAsync(message);
             await Task.Delay(1000);
         }
