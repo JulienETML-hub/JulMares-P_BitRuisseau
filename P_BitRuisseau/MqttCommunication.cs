@@ -152,10 +152,7 @@ namespace P_BitRuisseau
                 {
                     case MessageType.ENVOIE_CATALOGUE:
                         {
-                            //var SendCatalog = JsonSerializer.Deserialize<object>(enveloppe.EnveloppeJson);
-                            //MessageBox.Show("sss");
                             SendCatalog SendCatalog = JsonSerializer.Deserialize<SendCatalog>(enveloppe.EnveloppeJson);
-                           // MessageBox.Show("Recu envoie enveloppe" + SendCatalog.Content[0].Title.ToString());
                            
                             foreach(MediaData mediaData in SendCatalog.Content)
                             {
@@ -182,23 +179,15 @@ namespace P_BitRuisseau
 
                             SendMusic enveloppeEnvoieFichier = JsonSerializer.Deserialize<SendMusic>(enveloppe.EnveloppeJson);
                             byte[] contenuFichier = Convert.FromBase64String(enveloppeEnvoieFichier.Content);
-                            //byte[] contenuFichier = System.Text.Encoding.UTF8.GetBytes(enveloppeEnvoieFichier.Content);
                             MediaData mediaData = new MediaData(file_name: enveloppeEnvoieFichier.FileInfo.Title, file_artist: enveloppeEnvoieFichier.FileInfo.Artist, file_type: enveloppeEnvoieFichier.FileInfo.Type, file_size: enveloppeEnvoieFichier.FileInfo.Size, file_duration : enveloppeEnvoieFichier.FileInfo.Duration);
-                            //MediaData mediaData = enveloppeEnvoieFichier.FileInfo;
                             System.IO.File.WriteAllBytes($"../../../ressource/test/{mediaData.Title}", contenuFichier);
-                            // - {mediaData.Artist}{mediaData.Type}
-                            //System.IO.File.Create($"../../../ressource/test/{mediaData.Title} - {mediaData.Artist}{mediaData.Type}");
-                            //System.IO.File.WriteAllBytes($"../../../ressource/test/{mediaData.Title} - {mediaData.Artist}{mediaData.Type}", contenuFichier);
                             var file = TagLib.File.Create($"../../../ressource/test/{mediaData.Title}");
-                            //  - {mediaData.Artist}{mediaData.Type}
-                            //var file = TagLib.File.Create()
                             Debug.WriteLine("envoie fichier2");
                             
                             break;
                         }
                     case MessageType.DEMANDE_FICHIER:
                         {
-                            MessageBox.Show("messagedemandedefichier recu");
                             // prend lenvleoppe de dmd de fichier pr lire quel titre on veut de nous
                             AskMusic enveloppeDemandeMusic = JsonSerializer.Deserialize<AskMusic>(enveloppe.EnveloppeJson);
                             // recup le nom du titre
@@ -240,7 +229,6 @@ namespace P_BitRuisseau
                 .WithPayload(JsonSerializer.Serialize(enveloppe))
                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
                 .Build();
-            //MessageBox.Show("aaa" + enveloppe.EnveloppeJson);
             await mqttClient.PublishAsync(message);
             await Task.Delay(1000);
         }
@@ -259,7 +247,6 @@ namespace P_BitRuisseau
                 .WithPayload(JsonSerializer.Serialize(enveloppe))
                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
                 .Build();
-            MessageBox.Show("aaa" + enveloppe.EnveloppeJson);
             await mqttClient.PublishAsync(message);
             await Task.Delay(1000);
         }
