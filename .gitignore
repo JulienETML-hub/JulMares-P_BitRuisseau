@@ -45,7 +45,6 @@
 P_BitRuisseau/obj/Debug/net8.0-windows/P_BitRuisseau.assets.cache
 *.cache
 /P_BitRuisseau/obj
-*.csproj
 P_BitRuisseau/bin/Debug/net8.0-windows/P_BitRuisseau.runtimeconfig.json
 P_BitRuisseau/P_BitRuisseau.csproj.user
 P_BitRuisseau/bin/Debug/net8.0-windows/P_BitRuisseau.pdb
