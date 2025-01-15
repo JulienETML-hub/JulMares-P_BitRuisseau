@@ -153,7 +153,7 @@ namespace P_BitRuisseau
 
 
             // Envoi de l'enveloppe via MQTT
-            mqttCommunication.SendMessage(mqttCommunication.MqttClient, MessageType.DEMANDE_CATALOGUE, "mqttx_f1aade87", askCatalog, "julmat");
+            mqttCommunication.SendMessage(mqttCommunication.MqttClient, MessageType.DEMANDE_CATALOGUE, usernameBox.Text, askCatalog, "julmat");
 
         }
 
@@ -163,7 +163,7 @@ namespace P_BitRuisseau
             {
                 Title = "waiting",
             };
-            mqttCommunication.SendFile(mqttCommunication.MqttClient, MessageType.DEMANDE_FICHIER, "mqttx_f1aade87", askMusic, "julmat");
+            mqttCommunication.SendFile(mqttCommunication.MqttClient, MessageType.DEMANDE_FICHIER, usernameBox.Text, askMusic, "julmat");
 
         }
         private void updateListeFichiersCommu(List<MediaData> mediaDatasOnline)
@@ -220,7 +220,7 @@ namespace P_BitRuisseau
             {
                 Title = mediadata.Title + mediadata.Type
             };
-            mqttCommunication.SendFile(mqttCommunication.MqttClient, MessageType.DEMANDE_FICHIER, "mqttx_f1aade87", askMusic, "julmat");
+            mqttCommunication.SendFile(mqttCommunication.MqttClient, MessageType.DEMANDE_FICHIER, usernameBox.Text, askMusic, "julmat");
         }
     }
 }

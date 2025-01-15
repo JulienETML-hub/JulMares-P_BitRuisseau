@@ -40,6 +40,7 @@
             button1 = new Button();
             button2 = new Button();
             refresh = new Button();
+            usernameBox = new TextBox();
             SuspendLayout();
             // 
             // MediaTheque
@@ -153,11 +154,20 @@
             refresh.UseVisualStyleBackColor = true;
             refresh.Click += refresh_Click;
             // 
+            // usernameBox
+            // 
+            usernameBox.Location = new Point(32, 316);
+            usernameBox.Name = "usernameBox";
+            usernameBox.Size = new Size(100, 23);
+            usernameBox.TabIndex = 14;
+            usernameBox.Text = "userDefault";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(usernameBox);
             Controls.Add(refresh);
             Controls.Add(button2);
             Controls.Add(button1);
@@ -191,5 +201,6 @@
         private Button button1;
         private Button button2;
         private Button refresh;
+        private TextBox usernameBox;
     }
 }
